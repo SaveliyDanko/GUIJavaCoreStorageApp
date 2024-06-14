@@ -1,0 +1,40 @@
+2024-06-14 02:56:35 INFO  SQLConnectionManager:19 - Connected to the database successfully.
+2024-06-14 02:56:35 INFO  SQLDataBase:38 - Data Base connecting successfully
+2024-06-14 02:56:35 INFO  SQLDataBase:40 - Create tables successfully
+2024-06-14 02:57:11 INFO  AuthManager:34 - User sava authenticated successfully
+2024-06-14 02:57:18 INFO  AuthManager:34 - User max authenticated successfully
+2024-06-14 02:57:47 INFO  SQLDataBase:63 - Read object with id = 7
+2024-06-14 02:57:47 WARN  DeleteCommand:35 - User sava attempted to delete flat owned by max
+2024-06-14 02:57:50 INFO  SQLDataBase:63 - Read object with id = 7
+2024-06-14 02:57:50 INFO  SQLDataBase:81 - Deleted object with id = 7 successfully
+2024-06-14 02:57:50 INFO  DeleteCommand:40 - Flat with ID 7 deleted by user max
+2024-06-14 02:58:15 INFO  SQLDataBase:57 - Add item successfully
+2024-06-14 02:58:39 INFO  SQLDataBase:57 - Add item successfully
+2024-06-14 02:58:53 INFO  SQLDataBase:63 - Read object with id = 10
+2024-06-14 02:58:53 INFO  SQLDataBase:81 - Deleted object with id = 10 successfully
+2024-06-14 02:58:53 INFO  DeleteCommand:40 - Flat with ID 10 deleted by user sava
+2024-06-14 02:59:39 ERROR ClientHandler:45 - Error handling client: null
+java.io.EOFException: null
+	at java.io.ObjectInputStream$BlockDataInputStream.peekByte(ObjectInputStream.java:3232) ~[?:?]
+	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1713) ~[?:?]
+	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:540) ~[?:?]
+	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:498) ~[?:?]
+	at com.savadanko.server.network.ClientHandler.processRequests(ClientHandler.java:65) ~[Server-1.0-SNAPSHOT.jar:?]
+	at com.savadanko.server.network.ClientHandler.run(ClientHandler.java:42) ~[Server-1.0-SNAPSHOT.jar:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[?:?]
+	at java.lang.Thread.run(Thread.java:1583) [?:?]
+2024-06-14 02:59:41 ERROR ClientHandler:45 - Error handling client: null
+java.io.EOFException: null
+	at java.io.ObjectInputStream$BlockDataInputStream.peekByte(ObjectInputStream.java:3232) ~[?:?]
+	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1713) ~[?:?]
+	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:540) ~[?:?]
+	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:498) ~[?:?]
+	at com.savadanko.server.network.ClientHandler.processRequests(ClientHandler.java:65) ~[Server-1.0-SNAPSHOT.jar:?]
+	at com.savadanko.server.network.ClientHandler.run(ClientHandler.java:42) ~[Server-1.0-SNAPSHOT.jar:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[?:?]
+	at java.lang.Thread.run(Thread.java:1583) [?:?]
+2024-06-14 02:59:56 INFO  ConnectionManager:61 - ConnectionManager has been shut down.
+2024-06-14 02:59:56 INFO  ConnectionManager:46 - Server socket is closed, stopping ConnectionManager.
+2024-06-14 02:59:56 INFO  ConnectionManager:61 - ConnectionManager has been shut down.

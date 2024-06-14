@@ -1,0 +1,3 @@
+jdbc:postgresql://localhost:5432/ItmoDataBase
+savadanko
+SBD0r82Td0FqgoR2

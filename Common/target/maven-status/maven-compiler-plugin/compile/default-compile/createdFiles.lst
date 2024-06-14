@@ -1,0 +1,12 @@
+com/savadanko/common/models/Flat.class
+com/savadanko/common/dto/Response.class
+com/savadanko/common/models/Transport.class
+com/savadanko/common/models/View.class
+com/savadanko/common/dto/AuthDTO.class
+com/savadanko/common/dto/AuthResponse.class
+com/savadanko/common/dto/Request.class
+com/savadanko/common/dto/Status.class
+com/savadanko/common/dto/CommandProperties.class
+com/savadanko/common/models/User.class
+com/savadanko/common/models/Coordinates.class
+com/savadanko/common/models/House.class
