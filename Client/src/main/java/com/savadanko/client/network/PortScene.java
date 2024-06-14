@@ -41,12 +41,10 @@ public class PortScene {
     }
 
     private void createScene() {
-        // Create the VBox for the UI elements
         VBox vBox = new VBox();
         vBox.setAlignment(Pos.CENTER);
         vBox.setSpacing(10);
 
-        // Locale selection
         ComboBox<String> localeSelector = createLocaleSelector();
 
         label1 = new Label(bundle.getString("enter_port"));
@@ -60,34 +58,25 @@ public class PortScene {
 
         vBox.getChildren().addAll(localeSelector, label1, textField, button, warningPort, warningConnection);
 
-        // Create the background image
         Image backgroundImage = new Image("painting-mountain-lake-with-mountain-background.jpg");
         ImageView backgroundImageView = new ImageView(backgroundImage);
         backgroundImageView.setFitWidth(Screen.getPrimary().getVisualBounds().getWidth());
         backgroundImageView.setFitHeight(Screen.getPrimary().getVisualBounds().getHeight());
         backgroundImageView.setPreserveRatio(false);
 
-        // Create the StackPane to hold the background image and the VBox
         StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(backgroundImageView, vBox);
 
-        // Create the scene with the StackPane
         scene = new Scene(stackPane);
 
-        // Get screen size and set stage size
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         stage.setX(primaryScreenBounds.getMinX());
         stage.setY(primaryScreenBounds.getMinY());
         stage.setWidth(primaryScreenBounds.getWidth());
         stage.setHeight(primaryScreenBounds.getHeight());
 
-        // Set the scene to the stage
         stage.setScene(scene);
-
-        // Remove "Press ESC to exit full screen" message
         stage.setFullScreenExitHint("");
-
-        // Set full screen and maximize
         stage.setFullScreen(true);
         stage.setMaximized(true);
         stage.show();
@@ -142,12 +131,10 @@ public class PortScene {
                 warningPort.setStyle("-fx-text-fill: green;");
                 try {
                     Socket socket = new Socket("localhost", Integer.parseInt(port));
-                    LoginScene loginScene = new LoginScene(
-                            stage,
-                            scene,
-                            new ObjectOutputStream(socket.getOutputStream()),
-                            new ObjectInputStream(socket.getInputStream()),
-                            bundle);
+                    socket.setSoTimeout(5000); // Тайм-аут 5 секунд
+                    ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+                    ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+                    LoginScene loginScene = new LoginScene(stage, scene, out, in, bundle);
 
                     stage.setTitle("Login");
                     stage.setScene(loginScene.getScene());
@@ -163,7 +150,7 @@ public class PortScene {
         return button;
     }
 
-    // Метод для проверки, является ли строка числом
+
     private boolean isNumeric(String str) {
         if (str == null) {
             return false;

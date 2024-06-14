@@ -23,6 +23,7 @@ import lombok.Getter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
 @Getter
 public class LoginScene {
     private final Stage stage;
-    private final Scene previousScene;
+    private final Scene portScene;
     private final ObjectInputStream in;
     private final ObjectOutputStream out;
     private final ResourceBundle bundle;
@@ -42,14 +43,14 @@ public class LoginScene {
 
     public LoginScene(Stage stage, Scene previousScene, ObjectOutputStream out, ObjectInputStream in, ResourceBundle bundle) {
         this.stage = stage;
-        this.previousScene = previousScene;
+        this.portScene = previousScene;
         this.out = out;
         this.in = in;
         this.bundle = bundle;
         createScene();
     }
 
-    private void createScene(){
+    private void createScene() {
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
         grid.setVgap(8);
@@ -88,11 +89,11 @@ public class LoginScene {
 
                 Map<String, CommandProperties> commandMap = authResponse.getCommandPropertiesMap();
                 LinkedHashMap<Long, Flat> flatMap = convertToFlatMap(authResponse.getFlatMap());
-                ClientManager clientManager = new ClientManager(commandMap, flatMap, out, in, login, bundle);
+                ClientManager clientManager = new ClientManager(commandMap, flatMap, out, in, login, bundle, portScene, stage);
                 stage.setTitle(login);
                 stage.setScene(clientManager.getScene());
             } catch (IOException | ClassNotFoundException | NoSuchAlgorithmException e) {
-                stage.setScene(previousScene);
+                stage.setScene(portScene);
             }
         });
 

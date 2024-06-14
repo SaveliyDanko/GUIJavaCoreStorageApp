@@ -38,3 +38,50 @@ java.io.EOFException: null
 2024-06-14 02:59:56 INFO  ConnectionManager:61 - ConnectionManager has been shut down.
 2024-06-14 02:59:56 INFO  ConnectionManager:46 - Server socket is closed, stopping ConnectionManager.
 2024-06-14 02:59:56 INFO  ConnectionManager:61 - ConnectionManager has been shut down.
+2024-06-14 16:53:43 INFO  SQLConnectionManager:19 - Connected to the database successfully.
+2024-06-14 16:53:43 INFO  SQLDataBase:38 - Data Base connecting successfully
+2024-06-14 16:53:43 INFO  SQLDataBase:40 - Create tables successfully
+2024-06-14 16:53:57 INFO  AuthManager:34 - User sava authenticated successfully
+2024-06-14 16:54:08 INFO  ConnectionManager:46 - Server socket is closed, stopping ConnectionManager.
+2024-06-14 16:54:08 INFO  ConnectionManager:61 - ConnectionManager has been shut down.
+2024-06-14 16:54:08 INFO  ConnectionManager:61 - ConnectionManager has been shut down.
+2024-06-14 16:56:55 INFO  SQLConnectionManager:19 - Connected to the database successfully.
+2024-06-14 16:56:55 INFO  SQLDataBase:38 - Data Base connecting successfully
+2024-06-14 16:56:55 INFO  SQLDataBase:40 - Create tables successfully
+2024-06-14 16:57:05 INFO  AuthManager:34 - User sava authenticated successfully
+2024-06-14 16:57:26 INFO  SQLDataBase:63 - Read object with id = 11
+2024-06-14 16:57:26 WARN  DeleteCommand:35 - User sava attempted to delete flat owned by max
+2024-06-14 16:57:29 INFO  SQLDataBase:63 - Read object with id = 12
+2024-06-14 16:57:29 INFO  SQLDataBase:81 - Deleted object with id = 12 successfully
+2024-06-14 16:57:29 INFO  DeleteCommand:40 - Flat with ID 12 deleted by user sava
+2024-06-14 16:57:37 INFO  ConnectionManager:61 - ConnectionManager has been shut down.
+2024-06-14 16:57:37 INFO  ConnectionManager:46 - Server socket is closed, stopping ConnectionManager.
+2024-06-14 16:57:37 INFO  ConnectionManager:61 - ConnectionManager has been shut down.
+2024-06-14 17:04:41 INFO  SQLConnectionManager:19 - Connected to the database successfully.
+2024-06-14 17:04:41 INFO  SQLDataBase:38 - Data Base connecting successfully
+2024-06-14 17:04:41 INFO  SQLDataBase:40 - Create tables successfully
+2024-06-14 17:04:53 INFO  AuthManager:34 - User sava authenticated successfully
+2024-06-14 17:05:02 INFO  ConnectionManager:61 - ConnectionManager has been shut down.
+2024-06-14 17:05:02 INFO  ConnectionManager:46 - Server socket is closed, stopping ConnectionManager.
+2024-06-14 17:05:02 INFO  ConnectionManager:61 - ConnectionManager has been shut down.
+2024-06-14 17:11:44 INFO  SQLConnectionManager:19 - Connected to the database successfully.
+2024-06-14 17:11:44 INFO  SQLDataBase:38 - Data Base connecting successfully
+2024-06-14 17:11:44 INFO  SQLDataBase:40 - Create tables successfully
+2024-06-14 17:11:55 INFO  AuthManager:34 - User sava authenticated successfully
+2024-06-14 17:12:00 INFO  ConnectionManager:46 - Server socket is closed, stopping ConnectionManager.
+2024-06-14 17:12:00 INFO  ConnectionManager:61 - ConnectionManager has been shut down.
+2024-06-14 17:12:00 INFO  ConnectionManager:61 - ConnectionManager has been shut down.
+2024-06-14 17:22:46 INFO  SQLConnectionManager:19 - Connected to the database successfully.
+2024-06-14 17:22:46 INFO  SQLDataBase:38 - Data Base connecting successfully
+2024-06-14 17:22:46 INFO  SQLDataBase:40 - Create tables successfully
+2024-06-14 17:23:00 INFO  AuthManager:34 - User sava authenticated successfully
+2024-06-14 17:23:07 INFO  ConnectionManager:61 - ConnectionManager has been shut down.
+2024-06-14 17:23:07 INFO  ConnectionManager:46 - Server socket is closed, stopping ConnectionManager.
+2024-06-14 17:23:07 INFO  ConnectionManager:61 - ConnectionManager has been shut down.
+2024-06-14 17:27:54 INFO  SQLConnectionManager:19 - Connected to the database successfully.
+2024-06-14 17:27:54 INFO  SQLDataBase:38 - Data Base connecting successfully
+2024-06-14 17:27:54 INFO  SQLDataBase:40 - Create tables successfully
+2024-06-14 17:28:04 INFO  AuthManager:34 - User sava authenticated successfully
+2024-06-14 17:28:09 INFO  ConnectionManager:61 - ConnectionManager has been shut down.
+2024-06-14 17:28:09 INFO  ConnectionManager:46 - Server socket is closed, stopping ConnectionManager.
+2024-06-14 17:28:09 INFO  ConnectionManager:61 - ConnectionManager has been shut down.

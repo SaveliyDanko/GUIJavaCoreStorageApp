@@ -11,6 +11,7 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -20,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import lombok.Getter;
 
 import java.io.IOException;
@@ -32,14 +34,18 @@ import java.util.*;
 public class ClientManager {
     @Getter
     private Scene scene;
+    private final Scene portScene;
+    private final Stage stage;
     private final LinkedHashMap<Long, Flat> flatMap;
     private final ObjectOutputStream out;
     private final ObjectInputStream in;
     private final String login;
     private final ResourceBundle bundle;
-    private TextArea messageArea; // Область для вывода сообщений
+    private TextArea messageArea;
     private TableView<Flat> tableView;
-    private Pane visualizationPane; // Область для визуализации объектов
+    private Pane visualizationPane;
+    private boolean connectionLost = false;
+
 
     public ClientManager(
             Map<String, CommandProperties> commandMap,
@@ -47,12 +53,16 @@ public class ClientManager {
             ObjectOutputStream out,
             ObjectInputStream in,
             String login,
-            ResourceBundle bundle) {
+            ResourceBundle bundle,
+            Scene portScene,
+            Stage stage) {
         this.flatMap = flatMap;
         this.out = out;
         this.in = in;
         this.login = login;
         this.bundle = bundle;
+        this.portScene = portScene;
+        this.stage = stage;
         createScene(commandMap);
         startSyncTimer();
     }
@@ -64,7 +74,6 @@ public class ClientManager {
         messageArea.setEditable(false);
         messageArea.setWrapText(true);
 
-        // Создание панели для визуализации
         visualizationPane = new Pane();
         visualizationPane.setPrefSize(400, 400);
         updateVisualizationPane();
@@ -102,19 +111,49 @@ public class ClientManager {
         }
     }
 
-    private void requestSender(Request request){
-        try {
-            out.writeObject(request);
-            out.flush();
+    private void requestSender(Request request) {
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                try {
+                    out.writeObject(request);
+                    out.flush();
 
-            Response response = (Response) in.readObject();
-            // Вывод сообщения из response в TextArea
-            messageArea.appendText(response.getMessage() + "\n");
+                    Response response = (Response) in.readObject();
+                    Platform.runLater(() -> {
+                        messageArea.appendText(response.getMessage() + "\n");
+                        connectionLost = false;  // Сброс флага при успешном выполнении
+                    });
+                } catch (IOException | ClassNotFoundException e) {
+                    Platform.runLater(() -> handleIOException(e));
+                }
+                return null;
+            }
+        };
+        new Thread(task).start();
+    }
 
-        } catch (IOException | ClassNotFoundException e) {
-            messageArea.appendText("Error: " + e.getMessage() + "\n");
+    private void handleIOException(Exception e) {
+        if (!connectionLost) {
+            connectionLost = true;
+            Platform.runLater(() -> {
+                messageArea.appendText("Error: " + e.getMessage() + "\n");
+                System.out.println("Switching to port scene due to IOException: " + e.getMessage());
+                stage.setScene(portScene);
+                showAlert();
+            });
         }
     }
+
+    private void showAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(bundle.getString("connection_error"));
+        alert.setHeaderText(bundle.getString("server_unavailable"));
+        alert.setContentText(bundle.getString("try_reconnecting"));
+        alert.showAndWait();
+    }
+
+
 
     private void handleArgsInput(boolean needsObject, String commandName) {
         TextInputDialog dialog = new TextInputDialog();
@@ -212,7 +251,7 @@ public class ClientManager {
 
                     Request request = new Request(commandName, args, flat, login);
                     requestSender(request);
-                    Platform.runLater(this::updateVisualizationPane); // Обновление визуализации
+                    Platform.runLater(this::updateVisualizationPane);
 
                 } catch (IllegalArgumentException e) {
                     showErrorAlert(e.getMessage());
@@ -286,7 +325,6 @@ public class ClientManager {
         ObservableList<Flat> flatList = FXCollections.observableArrayList(flatMap.values());
         TableView<Flat> tableView = new TableView<>();
 
-        // Добавление столбцов в TableView
         tableView.getColumns().addAll(
                 createColumn(bundle.getString("id"), "id"),
                 createColumn(bundle.getString("name"), "name"),
@@ -306,7 +344,6 @@ public class ClientManager {
                 createColumn(bundle.getString("owner"), "owner")
         );
 
-        // Добавление контекстного меню
         tableView.setRowFactory(tv -> {
             TableRow<Flat> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -321,9 +358,7 @@ public class ClientManager {
                     });
 
                     MenuItem updateItem = new MenuItem(bundle.getString("update"));
-                    updateItem.setOnAction(e -> {
-                        handleObjectInput("update", new String[]{Long.toString(rowData.getId())});
-                    });
+                    updateItem.setOnAction(e -> handleObjectInput("update", new String[]{Long.toString(rowData.getId())}));
 
                     contextMenu.getItems().addAll(deleteItem, updateItem);
                     contextMenu.show(row, event.getScreenX(), event.getScreenY());
@@ -332,7 +367,6 @@ public class ClientManager {
             return row;
         });
 
-        // Установка данных в TableView
         tableView.setItems(flatList);
 
         return tableView;
@@ -363,8 +397,8 @@ public class ClientManager {
     @FunctionalInterface
     private interface CustomValueFactory<S, T> {
         javafx.beans.value.ObservableValue<T> apply(S source);
-    }
 
+    }
     private void startSyncTimer() {
         Timer syncTimer = new Timer(true);
         syncTimer.scheduleAtFixedRate(new TimerTask() {
@@ -375,26 +409,37 @@ public class ClientManager {
         }, 0, 5000);
     }
 
-    private void syncWithDatabase() {
-        Request request = new Request("sync", new String[0], null, login);
-        try {
-            out.writeObject(request);
-            out.flush();
-            Response response = (Response) in.readObject();
-            if (response.getFlatMap() != null) {
-                Platform.runLater(() -> updateData(convertMap(response.getFlatMap())));
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            Platform.runLater(() -> messageArea.appendText("Error: " + e.getMessage() + "\n"));
-        }
-    }
-
     private void updateData(LinkedHashMap<Long, Flat> newData) {
         flatMap.clear();
         flatMap.putAll(newData);
         updateTableView();
-        updateVisualizationPane(); // Обновление визуализации
+        updateVisualizationPane();
     }
+
+    private void syncWithDatabase() {
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                try {
+                    Request request = new Request("sync", new String[0], null, login);
+                    out.writeObject(request);
+                    out.flush();
+                    Response response = (Response) in.readObject();
+                    if (response.getFlatMap() != null) {
+                        Platform.runLater(() -> {
+                            updateData(convertMap(response.getFlatMap()));
+                            connectionLost = false;  // Сброс флага при успешном выполнении
+                        });
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    Platform.runLater(() -> handleIOException(e));
+                }
+                return null;
+            }
+        };
+        new Thread(task).start();
+    }
+
 
     private void updateTableView() {
         ObservableList<Flat> flatList = FXCollections.observableArrayList(flatMap.values());
@@ -423,11 +468,8 @@ public class ClientManager {
         visualizationPane.getChildren().clear();
 
         for (Flat flat : flatMap.values()) {
-            // Размер прямоугольника в зависимости от цены
-            double width = Math.max(50, flat.getPrice() / 10); // Минимальная ширина 50, масштабируемая по цене
-            double height = Math.max(30, flat.getPrice() / 20); // Минимальная высота 30, масштабируемая по цене
-
-            // Цвет прямоугольника в зависимости от владельца
+            double width = Math.max(50, flat.getPrice() / 10);
+            double height = Math.max(30, flat.getPrice() / 20);
             Color color = login.equals(flat.getOwner()) ? Color.BLUE : Color.GREEN;
 
             Rectangle rect = new Rectangle(width, height, color);
@@ -436,7 +478,7 @@ public class ClientManager {
 
             rect.setOnMouseClicked(event -> {
                 tableView.getSelectionModel().select(flat);
-                rect.setStroke(Color.RED); // Подсветка прямоугольника
+                rect.setStroke(Color.RED);
                 rect.setStrokeWidth(3);
             });
 
