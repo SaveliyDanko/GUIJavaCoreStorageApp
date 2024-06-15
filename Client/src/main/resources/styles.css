@@ -1,0 +1,146 @@
+/* Стили для Label */
+.label {
+    -fx-background-color: #FFFACD; /* Светло-жёлтый цвет фона */
+    -fx-border-color: #FFA500; /* Оранжевая рамка */
+    -fx-border-width: 2px; /* Ширина рамки */
+    -fx-text-fill: #FF8C00; /* Тёмно-оранжевый цвет текста */
+    -fx-padding: 5px 10px; /* Внутренние отступы */
+    -fx-border-radius: 5px; /* Закруглённые углы */
+    -fx-background-radius: 5px; /* Закруглённые углы для фона */
+    -fx-font-family: Arial, sans-serif; /* Шрифт */
+    -fx-font-size: 16px; /* Размер шрифта */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 4); /* Тень */
+    -fx-display: inline-block; /* Делаем метку блочным элементом */
+    -fx-margin: 5px 0; /* Внешние отступы */
+}
+
+/* Стили для TextField и PasswordField */
+.textField {
+    -fx-background-color: #FFFACD; /* Светло-жёлтый цвет фона */
+    -fx-border-color: #FFA500; /* Оранжевая рамка */
+    -fx-border-width: 2px; /* Ширина рамки */
+    -fx-text-fill: #FF8C00; /* Тёмно-оранжевый цвет текста */
+    -fx-padding: 10px; /* Внутренние отступы */
+    -fx-border-radius: 5px; /* Закруглённые углы */
+    -fx-background-radius: 5px; /* Закруглённые углы для фона */
+    -fx-font-family: Arial, sans-serif; /* Шрифт */
+    -fx-font-size: 16px; /* Размер шрифта */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 4); /* Тень */
+}
+
+.textField:focused {
+    -fx-border-color: #FF4500; /* Более яркая оранжевая рамка при фокусе */
+    -fx-effect: dropshadow(gaussian, rgba(255, 69, 0, 0.5), 10, 0, 0, 0); /* Оранжевая тень при фокусе */
+    -fx-outline: none; /* Убрать стандартный обвод фокуса */
+}
+
+/* Стили для Button */
+.button {
+    -fx-background-color: #FFA500; /* Оранжевый цвет фона */
+    -fx-border-color: #FF8C00; /* Тёмно-оранжевая рамка */
+    -fx-border-width: 2px; /* Ширина рамки */
+    -fx-text-fill: #FFF; /* Белый цвет текста */
+    -fx-padding: 10px 20px; /* Внутренние отступы */
+    -fx-border-radius: 5px; /* Закруглённые углы */
+    -fx-background-radius: 5px; /* Закруглённые углы для фона */
+    -fx-font-family: Arial, sans-serif; /* Шрифт */
+    -fx-font-size: 16px; /* Размер шрифта */
+    -fx-cursor: pointer; /* Курсор указателя */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 4); /* Тень */
+}
+
+.button:hover {
+    -fx-background-color: #FF8C00; /* Тёмно-оранжевый цвет фона при наведении */
+}
+
+.button:pressed {
+    -fx-background-color: #FF4500; /* Более яркий оранжевый цвет фона при нажатии */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 2, 0, 0, 2); /* Уменьшенная тень */
+}
+
+/* Стили для ComboBox */
+.comboBox {
+    -fx-background-color: #FFFACD; /* Светло-жёлтый цвет фона */
+    -fx-border-color: #FFA500; /* Оранжевая рамка */
+    -fx-border-width: 2px; /* Ширина рамки */
+    -fx-text-fill: #FF8C00; /* Тёмно-оранжевый цвет текста */
+    -fx-padding: 5px 10px; /* Внутренние отступы */
+    -fx-border-radius: 5px; /* Закруглённые углы */
+    -fx-background-radius: 5px; /* Закруглённые углы для фона */
+    -fx-font-family: Arial, sans-serif; /* Шрифт */
+    -fx-font-size: 16px; /* Размер шрифта */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 4); /* Тень */
+}
+
+.comboBox .list-cell {
+    -fx-background-color: #FFFACD; /* Светло-жёлтый цвет фона */
+    -fx-text-fill: #FF8C00; /* Тёмно-оранжевый цвет текста */
+}
+
+.comboBox .list-cell:hover {
+    -fx-background-color: #FF8C00; /* Тёмно-оранжевый цвет фона при наведении */
+    -fx-text-fill: #FFF; /* Белый цвет текста при наведении */
+}
+
+.comboBox .list-cell:pressed {
+    -fx-background-color: #FF4500; /* Более яркий оранжевый цвет фона при нажатии */
+    -fx-text-fill: #FFF; /* Белый цвет текста при нажатии */
+}
+
+.comboBox:focused {
+    -fx-border-color: #FF4500; /* Более яркая оранжевая рамка при фокусе */
+    -fx-effect: dropshadow(gaussian, rgba(255, 69, 0, 0.5), 10, 0, 0, 0); /* Оранжевая тень при фокусе */
+    -fx-outline: none; /* Убрать стандартный обвод фокуса */
+}
+
+/* styles.css */
+
+/* Стили для TextArea */
+.transparent-textarea {
+    -fx-background-color: transparent; /* Прозрачный фон */
+    -fx-background-insets: 0; /* Убираем отступы фона */
+    -fx-padding: 10px; /* Внутренние отступы */
+    -fx-text-fill: #FF8C00; /* Цвет текста (опционально) */
+    -fx-font-family: Arial, sans-serif; /* Шрифт (опционально) */
+    -fx-font-size: 14px; /* Размер шрифта (опционально) */
+}
+
+/* Пример для смены цвета фона */
+.colored-textarea {
+    -fx-background-color: #FFFACD; /* Светло-жёлтый цвет фона */
+    -fx-background-insets: 0; /* Убираем отступы фона */
+    -fx-padding: 10px; /* Внутренние отступы */
+    -fx-text-fill: #FF8C00; /* Цвет текста (опционально) */
+    -fx-font-family: Arial, sans-serif; /* Шрифт (опционально) */
+    -fx-font-size: 14px; /* Размер шрифта (опционально) */
+}
+
+/* styles.css */
+
+.custom-grid-pane {
+    -fx-padding: 10;
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+    -fx-background-color: #FFFACD; /* Светло-желтый фон */
+}
+
+.custom-label {
+    -fx-text-fill: #FF8C00; /* Темно-оранжевый текст */
+    -fx-font-weight: bold;
+}
+
+.custom-text-field {
+    -fx-background-color: #FFFACD; /* Светло-желтый фон */
+    -fx-border-color: #FFA500; /* Оранжевая рамка */
+    -fx-text-fill: #FF8C00; /* Темно-оранжевый текст */
+    -fx-padding: 5px;
+}
+
+.custom-combo-box {
+    -fx-background-color: #FFFACD; /* Светло-желтый фон */
+    -fx-border-color: #FFA500; /* Оранжевая рамка */
+    -fx-text-fill: #FF8C00; /* Темно-оранжевый текст */
+}
+
+
+

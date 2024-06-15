@@ -1,4 +1,4 @@
-package com.savadanko.client.network;
+package com.savadanko.client.network.portLogic;
 
 import com.savadanko.client.network.authorization.LoginScene;
 import javafx.geometry.Pos;
@@ -20,6 +20,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
@@ -48,18 +49,23 @@ public class PortScene {
         ComboBox<String> localeSelector = createLocaleSelector();
 
         label1 = new Label(bundle.getString("enter_port"));
+        label1.getStyleClass().add("label");
         warningPort = new Label();
+        warningPort.getStyleClass().add("label");
         warningConnection = new Label();
+        warningConnection.getStyleClass().add("label");
 
         textField = new TextField();
+        textField.getStyleClass().add("textField");
         textField.setPromptText(bundle.getString("enter_port"));
 
         button = getButton();
 
         vBox.getChildren().addAll(localeSelector, label1, textField, button, warningPort, warningConnection);
 
-        Image backgroundImage = new Image("painting-mountain-lake-with-mountain-background.jpg");
+        Image backgroundImage = new Image("/animeBoy.jpg");
         ImageView backgroundImageView = new ImageView(backgroundImage);
+        backgroundImageView.setOpacity(0.5);
         backgroundImageView.setFitWidth(Screen.getPrimary().getVisualBounds().getWidth());
         backgroundImageView.setFitHeight(Screen.getPrimary().getVisualBounds().getHeight());
         backgroundImageView.setPreserveRatio(false);
@@ -68,6 +74,7 @@ public class PortScene {
         stackPane.getChildren().addAll(backgroundImageView, vBox);
 
         scene = new Scene(stackPane);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles.css")).toExternalForm());
 
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         stage.setX(primaryScreenBounds.getMinX());
@@ -86,6 +93,7 @@ public class PortScene {
         ComboBox<String> localeSelector = new ComboBox<>();
         localeSelector.getItems().addAll("English", "Русский", "Polski", "Slovenský");
         localeSelector.setValue("English");
+        localeSelector.getStyleClass().add("comboBox"); // Добавляем CSS-класс
 
         localeSelector.setOnAction(event -> {
             String selectedLocale = localeSelector.getValue();
@@ -108,6 +116,7 @@ public class PortScene {
 
         return localeSelector;
     }
+
 
     private void loadLocale(Locale locale) {
         bundle = ResourceBundle.getBundle("locale", locale, new UTF8Control());
@@ -171,7 +180,7 @@ public class PortScene {
             String bundleName = toBundleName(baseName, locale);
             String resourceName = toResourceName(bundleName, "properties");
             ResourceBundle bundle;
-            try (InputStreamReader reader = new InputStreamReader(loader.getResourceAsStream(resourceName), StandardCharsets.UTF_8)) {
+            try (InputStreamReader reader = new InputStreamReader(Objects.requireNonNull(loader.getResourceAsStream(resourceName)), StandardCharsets.UTF_8)) {
                 bundle = new PropertyResourceBundle(reader);
             }
             return bundle;

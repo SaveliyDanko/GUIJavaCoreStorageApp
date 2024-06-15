@@ -23,10 +23,10 @@ import lombok.Getter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -56,25 +56,26 @@ public class LoginScene {
         grid.setVgap(8);
         grid.setHgap(10);
 
-        // Центрирование элементов
         grid.setAlignment(Pos.CENTER);
 
-        // Username
         Label nameLabel = new Label(bundle.getString("username"));
+        nameLabel.getStyleClass().add("label");
         GridPane.setConstraints(nameLabel, 0, 0);
 
         TextField loginInput = new TextField();
+        loginInput.getStyleClass().add("textField");
         GridPane.setConstraints(loginInput, 1, 0);
 
-        // Password
         Label passLabel = new Label(bundle.getString("password"));
+        passLabel.getStyleClass().add("label");
         GridPane.setConstraints(passLabel, 0, 1);
 
         PasswordField passInput = new PasswordField();
+        passInput.getStyleClass().add("textField");
         GridPane.setConstraints(passInput, 1, 1);
 
-        // Login button
         Button loginButton = new Button(bundle.getString("login"));
+        loginButton.getStyleClass().add("button");
         GridPane.setConstraints(loginButton, 1, 2);
 
         loginButton.setOnAction(actionEvent -> {
@@ -100,18 +101,20 @@ public class LoginScene {
         grid.getChildren().addAll(nameLabel, loginInput, passLabel, passInput, loginButton);
 
         // Create the background image
-        Image backgroundImage = new Image("painting-mountain-lake-with-mountain-background.jpg");
+        Image backgroundImage = new Image("/animeBoy.jpg");
         ImageView backgroundImageView = new ImageView(backgroundImage);
+        backgroundImageView.setOpacity(0.5);
         backgroundImageView.setFitWidth(Screen.getPrimary().getVisualBounds().getWidth());
         backgroundImageView.setFitHeight(Screen.getPrimary().getVisualBounds().getHeight());
         backgroundImageView.setPreserveRatio(false);
 
-        // Создание StackPane для размещения фона и элементов
         StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(backgroundImageView, grid);
 
         scene = new Scene(stackPane, 800, 600);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles.css")).toExternalForm());
     }
+
 
     private void sendAuthRequest(AuthDTO authDTO) throws IOException {
         out.writeObject(authDTO);

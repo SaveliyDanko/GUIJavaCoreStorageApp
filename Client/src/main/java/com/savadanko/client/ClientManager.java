@@ -15,12 +15,16 @@ import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Polygon;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.Getter;
 
@@ -45,7 +49,6 @@ public class ClientManager {
     private TableView<Flat> tableView;
     private Pane visualizationPane;
     private boolean connectionLost = false;
-
 
     public ClientManager(
             Map<String, CommandProperties> commandMap,
@@ -74,12 +77,23 @@ public class ClientManager {
         messageArea.setEditable(false);
         messageArea.setWrapText(true);
 
+        messageArea.getStyleClass().add("colored-textarea");
+
+        Image backgroundImage = new Image("/animeBoy.jpg");
+        ImageView backgroundImageView = new ImageView(backgroundImage);
+        backgroundImageView.setOpacity(0.5);
+        backgroundImageView.setFitWidth(Screen.getPrimary().getVisualBounds().getWidth());
+        backgroundImageView.setFitHeight(Screen.getPrimary().getVisualBounds().getHeight());
+        backgroundImageView.setPreserveRatio(false);
+
         visualizationPane = new Pane();
         visualizationPane.setPrefSize(400, 400);
         updateVisualizationPane();
 
         VBox vbox = new VBox(10, comboBox, tableView, messageArea, visualizationPane);
-        scene = new Scene(vbox, 800, 600);
+        StackPane stackPane = new StackPane(backgroundImageView, vbox);
+        scene = new Scene(stackPane, 800, 600);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles.css")).toExternalForm());
     }
 
     private ComboBox<String> createComboBox(Map<String, CommandProperties> commandMap) {
@@ -87,14 +101,23 @@ public class ClientManager {
         for (Map.Entry<String, CommandProperties> entry : commandMap.entrySet()) {
             comboBox.getItems().add(entry.getKey());
         }
+        comboBox.setPromptText("Select Command");
+
         comboBox.setOnAction(e -> {
             String selectedCommand = comboBox.getSelectionModel().getSelectedItem();
             if (selectedCommand != null) {
                 int argsCount = commandMap.get(selectedCommand).getArgsCount();
                 boolean isObject = commandMap.get(selectedCommand).isObject();
                 handleCommand(selectedCommand, argsCount, isObject);
+
+                // Сброс выбранного элемента для обеспечения повторного выполнения действия
+                Platform.runLater(() -> {
+                    comboBox.getSelectionModel().clearSelection();
+                    comboBox.setValue(null);
+                });
             }
         });
+        comboBox.getStyleClass().add("comboBox");
         return comboBox;
     }
 
@@ -114,7 +137,7 @@ public class ClientManager {
     private void requestSender(Request request) {
         Task<Void> task = new Task<>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() {
                 try {
                     out.writeObject(request);
                     out.flush();
@@ -153,8 +176,6 @@ public class ClientManager {
         alert.showAndWait();
     }
 
-
-
     private void handleArgsInput(boolean needsObject, String commandName) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle(bundle.getString("input_arguments"));
@@ -181,47 +202,103 @@ public class ClientManager {
         dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
 
         GridPane grid = new GridPane();
+        grid.getStyleClass().add("custom-grid-pane");
+
         TextField nameField = new TextField();
+        nameField.getStyleClass().add("custom-text-field");
         TextField xField = new TextField();
+        xField.getStyleClass().add("custom-text-field");
         TextField yField = new TextField();
+        yField.getStyleClass().add("custom-text-field");
         TextField areaField = new TextField();
+        areaField.getStyleClass().add("custom-text-field");
         TextField roomsField = new TextField();
+        roomsField.getStyleClass().add("custom-text-field");
         TextField priceField = new TextField();
+        priceField.getStyleClass().add("custom-text-field");
+
         ComboBox<View> viewComboBox = new ComboBox<>();
         viewComboBox.getItems().addAll(View.values());
+        viewComboBox.getStyleClass().add("custom-combo-box");
+
         ComboBox<Transport> transportComboBox = new ComboBox<>();
         transportComboBox.getItems().addAll(Transport.values());
-        TextField houseNameField = new TextField();
-        TextField houseYearField = new TextField();
-        TextField houseFloorsField = new TextField();
-        TextField houseFlatsField = new TextField();
-        TextField houseLiftsField = new TextField();
+        transportComboBox.getStyleClass().add("custom-combo-box");
 
-        grid.add(new Label(bundle.getString("name") + ":"), 0, 0);
+        TextField houseNameField = new TextField();
+        houseNameField.getStyleClass().add("custom-text-field");
+        TextField houseYearField = new TextField();
+        houseYearField.getStyleClass().add("custom-text-field");
+        TextField houseFloorsField = new TextField();
+        houseFloorsField.getStyleClass().add("custom-text-field");
+        TextField houseFlatsField = new TextField();
+        houseFlatsField.getStyleClass().add("custom-text-field");
+        TextField houseLiftsField = new TextField();
+        houseLiftsField.getStyleClass().add("custom-text-field");
+
+        grid.add(new Label(bundle.getString("name") + ":") {{
+            getStyleClass().add("custom-label");
+        }}, 0, 0);
         grid.add(nameField, 1, 0);
-        grid.add(new Label(bundle.getString("coordinate_x") + ":"), 0, 1);
+
+        grid.add(new Label(bundle.getString("coordinate_x") + ":") {{
+            getStyleClass().add("custom-label");
+        }}, 0, 1);
         grid.add(xField, 1, 1);
-        grid.add(new Label(bundle.getString("coordinate_y") + ":"), 0, 2);
+
+        grid.add(new Label(bundle.getString("coordinate_y") + ":") {{
+            getStyleClass().add("custom-label");
+        }}, 0, 2);
         grid.add(yField, 1, 2);
-        grid.add(new Label(bundle.getString("area") + ":"), 0, 3);
+
+        grid.add(new Label(bundle.getString("area") + ":") {{
+            getStyleClass().add("custom-label");
+        }}, 0, 3);
         grid.add(areaField, 1, 3);
-        grid.add(new Label(bundle.getString("number_of_rooms") + ":"), 0, 4);
+
+        grid.add(new Label(bundle.getString("number_of_rooms") + ":") {{
+            getStyleClass().add("custom-label");
+        }}, 0, 4);
         grid.add(roomsField, 1, 4);
-        grid.add(new Label(bundle.getString("price") + ":"), 0, 5);
+
+        grid.add(new Label(bundle.getString("price") + ":") {{
+            getStyleClass().add("custom-label");
+        }}, 0, 5);
         grid.add(priceField, 1, 5);
-        grid.add(new Label(bundle.getString("view") + ":"), 0, 6);
+
+        grid.add(new Label(bundle.getString("view") + ":") {{
+            getStyleClass().add("custom-label");
+        }}, 0, 6);
         grid.add(viewComboBox, 1, 6);
-        grid.add(new Label(bundle.getString("transport") + ":"), 0, 7);
+
+        grid.add(new Label(bundle.getString("transport") + ":") {{
+            getStyleClass().add("custom-label");
+        }}, 0, 7);
         grid.add(transportComboBox, 1, 7);
-        grid.add(new Label(bundle.getString("house_name") + ":"), 0, 8);
+
+        grid.add(new Label(bundle.getString("house_name") + ":") {{
+            getStyleClass().add("custom-label");
+        }}, 0, 8);
         grid.add(houseNameField, 1, 8);
-        grid.add(new Label(bundle.getString("house_year") + ":"), 0, 9);
+
+        grid.add(new Label(bundle.getString("house_year") + ":") {{
+            getStyleClass().add("custom-label");
+        }}, 0, 9);
         grid.add(houseYearField, 1, 9);
-        grid.add(new Label(bundle.getString("number_of_floors") + ":"), 0, 10);
+
+        grid.add(new Label(bundle.getString("number_of_floors") + ":") {{
+            getStyleClass().add("custom-label");
+        }}, 0, 10);
         grid.add(houseFloorsField, 1, 10);
-        grid.add(new Label(bundle.getString("flats_on_floor") + ":"), 0, 11);
+
+        grid.add(new Label(bundle.getString("flats_on_floor") + ":") {{
+            getStyleClass().add("custom-label");
+        }}, 0, 11);
         grid.add(houseFlatsField, 1, 11);
-        grid.add(new Label(bundle.getString("number_of_lifts") + ":"), 0, 12);
+
+        grid.add(new Label(bundle.getString("number_of_lifts") + ":") {{
+            getStyleClass().add("custom-label");
+        }}, 0, 12);
         grid.add(houseLiftsField, 1, 12);
 
         dialog.getDialogPane().setContent(grid);
@@ -262,6 +339,8 @@ public class ClientManager {
 
         dialog.showAndWait();
     }
+
+
 
     private String validateString(String value, String fieldName) {
         if (value == null || value.trim().isEmpty()) {
@@ -397,8 +476,8 @@ public class ClientManager {
     @FunctionalInterface
     private interface CustomValueFactory<S, T> {
         javafx.beans.value.ObservableValue<T> apply(S source);
-
     }
+
     private void startSyncTimer() {
         Timer syncTimer = new Timer(true);
         syncTimer.scheduleAtFixedRate(new TimerTask() {
@@ -419,7 +498,7 @@ public class ClientManager {
     private void syncWithDatabase() {
         Task<Void> task = new Task<>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() {
                 try {
                     Request request = new Request("sync", new String[0], null, login);
                     out.writeObject(request);
@@ -439,7 +518,6 @@ public class ClientManager {
         };
         new Thread(task).start();
     }
-
 
     private void updateTableView() {
         ObservableList<Flat> flatList = FXCollections.observableArrayList(flatMap.values());
@@ -467,22 +545,60 @@ public class ClientManager {
     private void updateVisualizationPane() {
         visualizationPane.getChildren().clear();
 
+        double minPrice = Double.MAX_VALUE;
+        double maxPrice = Double.MIN_VALUE;
+
         for (Flat flat : flatMap.values()) {
-            double width = Math.max(50, flat.getPrice() / 10);
-            double height = Math.max(30, flat.getPrice() / 20);
-            Color color = login.equals(flat.getOwner()) ? Color.BLUE : Color.GREEN;
+            double price = flat.getPrice();
+            if (price < minPrice) {
+                minPrice = price;
+            }
+            if (price > maxPrice) {
+                maxPrice = price;
+            }
+        }
 
-            Rectangle rect = new Rectangle(width, height, color);
-            rect.setX(Math.random() * (visualizationPane.getWidth() - width));
-            rect.setY(Math.random() * (visualizationPane.getHeight() - height));
+        double minSize = 30;
+        double maxSize = 100;
 
-            rect.setOnMouseClicked(event -> {
+        for (Flat flat : flatMap.values()) {
+            double price = flat.getPrice();
+            double normalizedSize = minSize + (price - minPrice) / (maxPrice - minPrice) * (maxSize - minSize);
+            double size = Math.max(minSize, normalizedSize);
+            Color color = login.equals(flat.getOwner()) ? Color.LIGHTBLUE : Color.ORANGE;
+
+            Polygon star = createStar(size, color);
+            star.setLayoutX(Math.random() * (visualizationPane.getWidth() - size));
+            star.setLayoutY(Math.random() * (visualizationPane.getHeight() - size));
+
+            star.setOnMouseClicked(event -> {
                 tableView.getSelectionModel().select(flat);
-                rect.setStroke(Color.RED);
-                rect.setStrokeWidth(3);
+                star.setStroke(Color.RED);
+                star.setStrokeWidth(3);
             });
 
-            visualizationPane.getChildren().add(rect);
+            visualizationPane.getChildren().add(star);
         }
     }
+
+    private Polygon createStar(double size, Color color) {
+        Polygon star = new Polygon();
+        double centerX = size / 2;
+        double centerY = size / 2;
+        double radius = size / 2;
+
+        for (int i = 0; i < 10; i++) {
+            double angle = 2 * Math.PI / 10 * i;
+            double r = (i % 2 == 0) ? radius : radius / 2;
+            double x = centerX + r * Math.cos(angle);
+            double y = centerY + r * Math.sin(angle);
+            star.getPoints().addAll(x, y);
+        }
+
+        star.setFill(color);
+        return star;
+    }
+
+
+
 }
